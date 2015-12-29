@@ -84,5 +84,5 @@ function keyUpHandler(e) {
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-setInterval(draw, 100);
+setInterval(draw, 10);
 
