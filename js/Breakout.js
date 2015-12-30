@@ -22,12 +22,34 @@ var brickPadding = 10;
 var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
 var bricks = [];
+var newRack = 1;
 
-for(c=0; c<brickColumnCount; c++) {
-    bricks[c] = [];
-    for(r=0; r<brickRowCount; r++) {
-        bricks[c][r] = { x: 0, y: 0, status: 1 };
-    }
+var score = 0;
+
+function initBricks () {
+	for(c=0; c<brickColumnCount; c++) {
+	    bricks[c] = [];
+	    for(r=0; r<brickRowCount; r++) {
+	        bricks[c][r] = { x: 0, y: 0, status: 1 };
+	    }
+	}
+}
+
+function checkBricks() {
+	if ((newRack == 0) && (score % (brickRowCount * brickColumnCount)  == 0)) {
+		for(c=0; c<brickColumnCount; c++) {
+	   		for(r=0; r<brickRowCount; r++) {
+	        	bricks[c][r] = { x: 0, y: 0, status: 1 };
+	    	}
+	    }	
+	    newRack = 1;
+	}
+}
+
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: "+score, 8, 20);
 }
 
 function drawBricks() {
@@ -93,9 +115,18 @@ function collisionDetection() {
 	            if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
 	                dy = -dy;
 	                b.status = 0;
+	                score++;
+	                newRack = 0;
 	            }
             }
         }
+    }
+}
+
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
     }
 }
 
@@ -105,6 +136,8 @@ function draw() {
     collisionDetection();
     drawBricks();
     drawBall();
+    drawScore();
+    checkBricks();
     x += dx;
     y += dy;
 	if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
@@ -127,11 +160,15 @@ function draw() {
 	else if(leftPressed && paddleX > 0) {
 	    paddleX -= 7;
 	}
+	
+	requestAnimationFrame(draw);
 
 } // end draw()
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
 
-setInterval(draw, 10);
+initBricks();
+draw();
 
