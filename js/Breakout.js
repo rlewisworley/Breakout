@@ -4,6 +4,9 @@
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
+var c_width = canvas.width;
+var c_height = canvas.height;
+
 var x = canvas.width/2;
 var y = canvas.height-30;
 var dx = 2;
@@ -15,19 +18,21 @@ var paddleX = (canvas.width-paddleWidth)/2;
 var rightPressed = false;
 var leftPressed = false;
 var brickRowCount = 3;
-var brickColumnCount = 5;
-var brickWidth = 75;
-var brickHeight = 20;
+var brickColumnCount = 7;
 var brickPadding = 10;
-var brickOffsetTop = 30;
 var brickOffsetLeft = 30;
+
+//var brickWidth = 50;
+var brickWidth = (c_width - 2 * brickOffsetLeft - brickColumnCount*brickPadding) / brickColumnCount;
+var brickHeight = 20;
+var brickOffsetTop = 30;
 var bricks = [];
 var newRack = 1;
 
 var score = 0;
 
 function initBricks () {
-	for(c=0; c<brickColumnCount; c++) {
+	for(var c=0; c<brickColumnCount; c++) {
 	    bricks[c] = [];
 	    for(r=0; r<brickRowCount; r++) {
 	        bricks[c][r] = { x: 0, y: 0, status: 1 };
